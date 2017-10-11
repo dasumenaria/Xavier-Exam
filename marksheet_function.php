@@ -225,6 +225,8 @@ function header_info_XAVIER($id,$exam_name)
 		$ftc_schl=mysql_fetch_array($schl);
                 
 	?>
+	<div style="float:left;padding:5px"><b>Reg.No. :PPL/UPS/ENG/134</b></div>
+	<div style="float:right;padding:5px"><b>School Code : 08201700199</b></div>
     <table width="70%" border="0" style="margin-left:15%;">
         <tr>
         	<td width="25%" rowspan="2">

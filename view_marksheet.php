@@ -162,8 +162,12 @@ $CuttentStatust=mysql_query("select `roman` from `master_class` where `id`='$cla
 			///*- SUVJECT ALLOCSTYION LOOP
 			$SNo=0;
 			$SNotot=0;
-			 
- 			$FindSubject=mysql_query("select distinct `subject_id`,`elective` from `subject_allocation` where `class_id`='$class_id'  && `section_id`='$section_id'");
+			$SubjectDataQuery=mysql_query("select * from `subject` order by `order_type` ASC ");
+			while($FtcSubjectDataQuery=mysql_fetch_array($SubjectDataQuery))
+			{
+				$SubjectIdGrade=$FtcSubjectDataQuery['id'];
+			
+ 			$FindSubject=mysql_query("select distinct `subject_id`,`elective` from `subject_allocation` where `class_id`='$class_id'  && `section_id`='$section_id' && `subject_id` ='$SubjectIdGrade'");
 			while($ftc_subject=mysql_fetch_array($FindSubject))
 			{
  				$subject_id=$ftc_subject['subject_id'];
@@ -403,6 +407,7 @@ $CuttentStatust=mysql_query("select `roman` from `master_class` where `id`='$cla
 					}
 					 
 			  }
+			}
 			}
  			///*- END SUVJECT ALLOCSTYION LOOP
  			
