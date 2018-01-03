@@ -115,11 +115,12 @@ $CuttentStatust=mysql_query("select `roman` from `master_class` where `id`='$cla
 					}
 					if($colspan==1){$colspan=0;}
 					?>
-					<th height="25px" colspan="<?php echo $colspan+2; ?>"><b><?php echo $heading_name; ?></b></th>
+					<th height="25px" ><b><?php 
+					if($heading_term==2){ echo "TERM-I";  }else if($heading_term==5){ echo "TERM-II";  } ?></b></th>
 					<?php
                 }
                 ?>	
-            <th colspan="2">Grand Total</th>
+            <th  >Grand Total</th>
          </tr>
         <tr class="header_font">
              <?php 
@@ -141,19 +142,20 @@ $CuttentStatust=mysql_query("select `roman` from `master_class` where `id`='$cla
 						if($countexam_mapping>0)
 						{	
 							$no_of_column++; 	 
-						?><td align="center" height="25px"><strong>MM</strong></td>
-						  <td align="center"><strong><?php $no_of_column++;?>OBT</strong></td>
+						?><td align="center" height="25px"><strong>Grade</strong></td>
+						  <!--td align="center"><strong><?php //$no_of_column++;?>OBT</strong></td-->
 						<?php						
 						}
 						else
-						{for($x=0; $x<$countArchitecure; $x++){echo"<td colspan='2'></td>";}}
+						{for($x=0; $x<$countArchitecure; $x++){echo"<td ></td>";}}
 						}
 					}
                 ?>
-				<td align="center"><strong> <?php $no_of_column++;?>MM</strong></td>
-				<td align="center"><strong> <?php $no_of_column++;?>OBT</strong></td>
+				<td align="center"><strong> <?php $no_of_column++;?>Grade</strong></td>
+				<!--td align="center"><strong> <?php //$no_of_column++;?>OBT</strong></td-->
         </tr>
         	<?php 
+			$no_of_column;
  			$OverAllTotalGetMarks=0;
 			$OverAllTotalMaxMarks=0;
 			$Result=0;
@@ -209,7 +211,7 @@ $CuttentStatust=mysql_query("select `roman` from `master_class` where `id`='$cla
 				 
 				?>
                  <tr class="<?php if($sub_sub_count>0){ echo "subsubject";}?>">
-                    <th height="33" width="15%" class="header_sub " colspan="<?php echo $col_span_sub;?>" style="margin-left:5px" rowspan="<?php echo $sub_count; ?>">
+                    <th height="33" width="15%" class="header_sub " colspan="<?php echo $col_span_sub;?>" style="margin-left:5px" rowspan="<?php echo $sub_count+1; ?>">
 					<?php echo $subject; ?></th> 
 					<?php 
 			if($sub_count>0)
@@ -270,20 +272,26 @@ $CuttentStatust=mysql_query("select `roman` from `master_class` where `id`='$cla
 									$OverAllTotalGetMarks+=$SubjectMarks;
 								}
 								?>
-								<td><?php echo $MainMaxMarks; ?></td>
+								<td>
+								<?php $find_grade=number_format((($TotalOneSubject/$MainMaxMarks)*100), 2);
+									$grade_find=calculate_grads($find_grade, $class_id); 
+									
+									echo $TotalOneSubject.'/'.$MainMaxMarks.'('.$grade_find.')';
+									?>
+								</td>
 								
 								<?php if($sub_sub_count>0){ ?>
-								<input type="hidden" class='rowno_<?php echo $subject_id."_".$SNo; ?>' value="<?php echo $MainMaxMarks;?>">
+								<input type="hidden" gain="<?php echo $TotalOneSubject;?>" class='rowno_<?php echo $subject_id."_".$SNo; ?>' value="<?php echo $MainMaxMarks;?>">
 								
 								<?php $SNo++;  ?>
 								<input type="hidden" class='rowno_<?php echo $subject_id."_".$SNo; ?>' value="<?php echo $TotalOneSubject;?>">
 								<?php }?>
 								
-								<input type="hidden" class='total_<?php echo $subject_id."_".$SNotot; ?>' value="<?php echo $MainMaxMarks;?>">
+								<input type="hidden" tot_gain="<?php echo $TotalOneSubject;?>" class='total_<?php echo $subject_id."_".$SNotot; ?>' value="<?php echo $MainMaxMarks;?>">
 								<?php $SNotot++;  ?>
 								<input type="hidden" class='total_<?php echo $subject_id."_".$SNotot; ?>' value="<?php echo $TotalOneSubject;?>">
 								
-								<td><?php echo $TotalOneSubject;//.'( '.$TotalOneSubjectMax.' )'; ?> </td>
+								<!--td><?php //echo $TotalOneSubject;//.'( '.$TotalOneSubjectMax.' )'; ?></td-->
 							<?php
 							$forCOl++;
 							}
@@ -298,11 +306,16 @@ $CuttentStatust=mysql_query("select `roman` from `master_class` where `id`='$cla
 							$FaildInSubject[]=$subject;
 						}
 						?>
-                         	<th><?php echo $TotalMaxMarks; ?></th>
-                         	<th><?php echo $TotalGetMarks;//.'( '.$TotalMaxMarks.' )'; ?></th>
+                         	<th><?php //echo $TotalMaxMarks;
+							$find_grade=number_format((($TotalGetMarks/$TotalMaxMarks)*100), 2);
+							$grade_find=calculate_grads($find_grade, $class_id);
+							echo $TotalGetMarks.'/'.$TotalMaxMarks.'('.$grade_find.')';
+							?>
+							</th>
+                         	<th><?php //echo $TotalGetMarks;//.'( '.$TotalMaxMarks.' )'; ?></th>
 							
 							<?php if($sub_sub_count>0){  $SNo++;  ?>
-								<input type="hidden" class='rowno_<?php echo $subject_id."_".$SNo; ?>' value="<?php echo $TotalMaxMarks;?>">
+								<input type="hidden" gain="<?php echo $TotalGetMarks;?>" class='rowno_<?php echo $subject_id."_".$SNo; ?>' value="<?php echo $TotalMaxMarks;?>">
 								<?php $SNo++;  ?>
 								<input type="hidden" class='rowno_<?php echo $subject_id."_".$SNo; ?>' value="<?php echo $TotalGetMarks;?>">
 								<?php }?>
@@ -337,7 +350,7 @@ $CuttentStatust=mysql_query("select `roman` from `master_class` where `id`='$cla
 				{
 				 ?>
 				  <tr>
-				  <th colspan="2" height="25px">Total</th>
+				  <th height="25px">Totals</th>
 					<?php 
 					$x=0;
 					for($g=1; $g<=$no_of_column; $g++)
@@ -350,6 +363,7 @@ $CuttentStatust=mysql_query("select `roman` from `master_class` where `id`='$cla
 						$(document).ready(function()
 						{
 							var tot=0;
+							var gain=0;
 							var tots=0;
 							var totssss=0;
 							var sub=<?php echo $subject_id; ?>;
@@ -359,19 +373,23 @@ $CuttentStatust=mysql_query("select `roman` from `master_class` where `id`='$cla
 									if($('.rowno_'+sub+'_'+i).length>0)
 									{
 										tot+=eval($(this).val());
+										gain+=eval($(this).attr('gain'));
 									}
 									else
 									{
 										 tot+=0;
+										 gain+=0;
 									}
 								});
-								$("#hello"+sub+"_<?php echo $x;?>").text(tot); 
+								var sub_cal=((gain/tot)*100);
+								  
+								//$("#hello"+sub+"_<?php echo $x;?>").text(sub_cal);
 						});
 						</script>
 					  
 					<?php
 					}
-				  ?>					
+				  ?>
 				</tr>
 				 <?php
 				}
@@ -397,7 +415,7 @@ $CuttentStatust=mysql_query("select `roman` from `master_class` where `id`='$cla
 									{
 										 totmarks+=0;
 									}
-								});
+								}); 
  								$("#AllOverTotal_<?php echo $x;?>").text(totmarks);
 								$("#AllOverTotaltext_<?php echo $x;?>").val(totmarks);
 						});
@@ -421,6 +439,11 @@ $CuttentStatust=mysql_query("select `roman` from `master_class` where `id`='$cla
 			while($ftc_subject=mysql_fetch_array($FindSubject))
 			{
 				$SNo++;
+				$slt1=mysql_query("select DISTINCT(`sub_subject_id`) from `exam_mapping` where `class_id`='$class_id' && `section_id`='$section_id' && `subject_id`='$SubjectIdGrade'");
+				$sub_sub_count1=mysql_num_rows($slt1);
+				if($sub_sub_count1>0){
+					$sub_count1=$sub_sub_count1;
+				}
 				$subject_id=$ftc_subject['subject_id'];
 				if(empty($subject_id))
 				{
@@ -441,7 +464,11 @@ $CuttentStatust=mysql_query("select `roman` from `master_class` where `id`='$cla
 				 
 				?>
                  <tr>
-                    <th height="33" colspan="2" width="8%" style="margin-left:5px"><?php echo $subject; if(!empty($sub_subject_name)){ ?>-<?php echo $sub_subject_name; } ?></th> 
+                    <th height="33" width="8%" rowspan="<?php echo $sub_count1+1; ?>" style="margin-left:5px">
+						<?php echo $subject; ?>
+					</th>
+					<th><?php if(!empty($sub_subject_name)){ echo $sub_subject_name; } ?></th> 
+					
                 <?php
 					 $TotalMaxMarks=0;
 						$TotalGetMarks=0;
@@ -483,16 +510,29 @@ $CuttentStatust=mysql_query("select `roman` from `master_class` where `id`='$cla
 									$OverAllTotalGetMarkss+=$SubjectMarks;
 								}
 								?>
-								<th><?php echo $MainMaxMarks;//.'( '.$TotalOneSubjectMax.' )'; ?> </th>
-								<th><?php echo $TotalOneSubject;//.'( '.$TotalOneSubjectMax.' )'; ?> </th>
+								<th><?php // echo $TotalOneSubject.'/'.$MainMaxMarks.'( '.$TotalOneSubjectMax.' )'; ?>
+
+								<?php //echo $TotalMaxMarks;
+							$find_grade=number_format((($TotalOneSubject/$MainMaxMarks)*100), 2);
+							$grade_find=calculate_grads($find_grade, $class_id);
+							echo $TotalOneSubject.'/'.$MainMaxMarks.'('.$grade_find.')';
+							?>
+								</th>
+								<!--th><?php //echo $TotalOneSubject;//.'( '.$TotalOneSubjectMax.' )'; ?> </th-->
 							<?php
 							}
  						}
 					}
 					//** END Exam Mapping Table ------- FInd Exam Category 
  					?>
-                         	<th><?php echo $TotalMaxMarks; ?></th>
-                         	<th><?php echo $TotalGetMarks;//.'( '.$TotalMaxMarks.' )'; ?></th>
+                         	<!--th><?php //echo $TotalMaxMarks; ?></th-->
+                         	<th><?php //echo $TotalGetMarks.'/'.$TotalMaxMarks.' ('; ?>
+							<?php //echo $TotalMaxMarks;
+							$find_grade=number_format((($TotalGetMarks/$TotalMaxMarks)*100), 2);
+							$grade_find=calculate_grads($find_grade, $class_id);
+							echo $TotalGetMarks.'/'.$TotalMaxMarks.'('.$grade_find.')';
+							?>
+							</th>
                     <?php
 						//** FInd Grade
 						if($TotalGetMarks==0 || $TotalMaxMarks==0){$GetOneSubjectPercentage=0;}
@@ -507,6 +547,9 @@ $CuttentStatust=mysql_query("select `roman` from `master_class` where `id`='$cla
 						?>
                            <!--<th><?php echo $grade;  ?></th>--->
 						</tr>
+						<tr>
+							<th>Total</th>
+						</tr>
 						<?php
 					 
 				//* END  Architacher Loop
@@ -514,7 +557,8 @@ $CuttentStatust=mysql_query("select `roman` from `master_class` where `id`='$cla
 		}
 		?>
              <tr class="header_sub">
-                <th style="height:35px" colspan="2">Grand Total</th>
+			 <th></th>
+                <th style="height:35px" >Grand Total</th>
 				<?php 
 					$x=0;
 					for($g=1; $g<=$no_of_column; $g++)
@@ -537,7 +581,10 @@ $CuttentStatust=mysql_query("select `roman` from `master_class` where `id`='$cla
         <!----End Maximum Rows---->
 		 
 					<table width="100%"  cellspacing="0px" cellpadding="0px" border="1">
-					 
+					
+					
+					
+					
 						<tr>
 							 <th style="height:55px" >Attendance Term</th>
 							 <?php 
@@ -580,7 +627,23 @@ $CuttentStatust=mysql_query("select `roman` from `master_class` where `id`='$cla
 							<th><?php echo $totalAttendP.'/'.$totalAttendPGET;?></th>
 						 </tr>
 					</table>
-				 
+				 <table width="100%" border="1">
+				 <tr>
+				 <td style="text-align:center;" height="45px"><b>9 POINT SCALE: 
+				 <?php 
+					$s=mysql_query("select * from `master_grade` where `class_id`='$class_id'");
+					while($f=mysql_fetch_array($s))
+					{
+						$range_from=$f['range_from'];
+						$range_to=$f['range_to'];
+						$grade=$f['grade'];
+						echo $range_from.' - '.$range_to.'  ['.$grade.']';
+						echo "&nbsp;";
+					}
+				 ?></b>
+				 </td>
+				 </tr>
+				 </table>
 				   
                         <?php
 						 //** Calculate Percentage

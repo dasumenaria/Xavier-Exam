@@ -367,6 +367,15 @@ function header_info_CBA($id,$exam_name)
 	<?php
 }
 
+function calculate_grads($mhfa1,$class_id)
+{
+ 	$st=mysql_query("select `grade` from `master_grade` where `range_from`<='$mhfa1' && `range_to`>='$mhfa1' && `class_id`='$class_id'");
+	$ft=mysql_fetch_array($st);
+	
+	return $grade_point=$ft['grade'];
+	
+	
+}
 function calculate_grade_point($mhfa1)
 {
 	if($mhfa1>=0 && $mhfa1<=20.99)

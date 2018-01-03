@@ -50,12 +50,12 @@
 				ob_flush();
 			}
 			 $flag=0;
-		}  
+		}
 		else
 		{
 			  $flag=1;
 		}	 
-	   
+
 	}
 ?>
 

@@ -204,11 +204,11 @@ $CuttentStatust=mysql_query("select `roman` from `master_class` where `id`='$cla
 				if($sub_sub_count>0){
 					$sub_count=$sub_sub_count;
 				}
-				/* if($sub_count==1)
-				{$col_span_sub=2;} */
+				if($sub_count==1)
+				{$col_span_sub=2;}
 				 
 				?>
-                 <tr class="<?php if($sub_sub_count>0){ echo "subsubject";}?>">
+                 <tr class="<?php if($sub_sub_count>1){ echo "subsubject";}?>">
                     <th height="33" width="15%" class="header_sub " colspan="<?php echo $col_span_sub;?>" style="margin-left:5px" rowspan="<?php echo $sub_count; ?>">
 					<?php echo $subject; ?></th> 
 					<?php 
@@ -272,7 +272,7 @@ $CuttentStatust=mysql_query("select `roman` from `master_class` where `id`='$cla
 								?>
 								<td><?php echo $MainMaxMarks; ?></td>
 								
-								<?php if($sub_sub_count>0){ ?>
+								<?php if($sub_sub_count>1){ ?>
 								<input type="hidden" class='rowno_<?php echo $subject_id."_".$SNo; ?>' value="<?php echo $MainMaxMarks;?>">
 								
 								<?php $SNo++;  ?>
@@ -301,7 +301,7 @@ $CuttentStatust=mysql_query("select `roman` from `master_class` where `id`='$cla
                          	<th><?php echo $TotalMaxMarks; ?></th>
                          	<th><?php echo $TotalGetMarks;//.'( '.$TotalMaxMarks.' )'; ?></th>
 							
-							<?php if($sub_sub_count>0){  $SNo++;  ?>
+							<?php if($sub_sub_count>1){  $SNo++;  ?>
 								<input type="hidden" class='rowno_<?php echo $subject_id."_".$SNo; ?>' value="<?php echo $TotalMaxMarks;?>">
 								<?php $SNo++;  ?>
 								<input type="hidden" class='rowno_<?php echo $subject_id."_".$SNo; ?>' value="<?php echo $TotalGetMarks;?>">
@@ -537,7 +537,10 @@ $CuttentStatust=mysql_query("select `roman` from `master_class` where `id`='$cla
         <!----End Maximum Rows---->
 		 
 					<table width="100%"  cellspacing="0px" cellpadding="0px" border="1">
-					 
+					
+					
+					
+					
 						<tr>
 							 <th style="height:55px" >Attendance Term</th>
 							 <?php 
