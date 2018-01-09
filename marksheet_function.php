@@ -376,6 +376,40 @@ function calculate_grads($mhfa1,$class_id)
 	
 	
 }
+function calculate_all_grads($mhaf){
+	if($mhaf<=1){
+		$grade="E";
+	}
+	else if($mhaf==2){
+		$grade="E+";
+	}
+	else if($mhaf==3){
+		$grade="D";
+	}
+	else if($mhaf==4){
+		$grade="D+";
+	}
+	else if($mhaf==5){
+		$grade="C";
+	}
+	else if($mhaf==6){
+		$grade="C+";
+	}
+	else if($mhaf==7){
+		$grade="B";
+	}
+	else if($mhaf==8){
+		$grade="B+";
+	}
+	else if($mhaf==9){
+		$grade="A+";
+	}
+	else if($mhaf==10){
+		$grade="A+";
+	}
+	
+	return $grade;
+}
 function calculate_grade_point($mhfa1)
 {
 	if($mhfa1>=0 && $mhfa1<=20.99)
