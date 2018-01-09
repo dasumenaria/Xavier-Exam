@@ -2,7 +2,16 @@
 include("index_layout.php");
 include("database.php");
 include("authentication.php");
-
+if(isset($_POST['test'])){
+ $class=$_POST['cls'];
+ $section=$_POST['sec'];
+ $subject=$_POST['subject'];
+ $exam_name=$_POST['trm'];
+ $cat=$_POST['cat'];
+	@header('location:assign_marks.php?cls='.$class.'&sec='.$section.'&sub='.$subject.'&trm='.$exam_name.'&cat='.$cat.'');
+	exit;
+}
+$role_id=$_SESSION['role'];
 $class=$_GET['cls'];
 $section=$_GET['sec'];
 $subject_fetch=$_GET['sub'];
@@ -102,6 +111,7 @@ $query=mysql_query("select * from `student` where `class_id`='$class_id' && `sec
 						<b><?php echo $cat_name; ?></b>
 					</div>
 				</div>
+				<?php  if($role_id==1){	?>
 				<div class="col-md-offset-1 col-md-9" style="padding-top:10px;font-size:15px;">
 					<div class="col-md-2"><b>Class:- </b><?php echo $cl_name ;?></div>
 					<div class="col-md-offset-1 col-md-2"><b>Section:- </b><?php echo $se_name ;?></div>
@@ -109,6 +119,87 @@ $query=mysql_query("select * from `student` where `class_id`='$class_id' && `sec
 					<div class="col-md-offset-1 col-md-2"><b>Term:- </b><?php echo $trm_name ;?></div>
 					
 				</div>
+				
+				<?php  }else if($role_id==2){ ?>
+				
+				<div class="col-md-offset-1 col-md-9" style="padding-top:10px;font-size:15px;">
+				<div class="col-md-2"><b>Class:- </b><?php echo $cl_name ;?></div>
+				<div class="col-md-offset-1 col-md-2"><b>Section:- </b><?php echo $se_name ;?></div>
+				<div class="col-md-offset-1 col-md-3"><b>Subject:- </b><?php echo $su_name ;?></div>
+				<div class="col-md-offset-1 col-md-2"><b>Term:- </b><?php echo $trm_name ;?></div>
+				</div>
+<br>	
+				<div class="col-md-offset-3 col-md-10">
+				<form method="post">
+	
+					<div class="form-group">
+							
+							<div class="col-md-4">
+							   <div class="input-icon right">
+									<i class="fa"></i>
+									<select class="form-control user2" required name="subject">
+									<option value="">---Select Subject---</option> 
+								   <?php
+								   
+								
+								   $querys=mysql_query("select `subject_id`,`sub_subject_id` from `subject_allocation` where `class_id`='$class' && `elective`='0' && section_id='$section'");
+								  
+								   while($fet=mysql_fetch_array($querys))
+								   {$f++;
+										$sub_ids=$fet['subject_id'];
+										$sub_subject_ids=$fet['sub_subject_id'];
+										 
+										$sets=mysql_query("select `subject` from `subject` where `id`='$sub_ids'");
+										$fets=mysql_fetch_array($sets);
+										
+										$sub_names=$fets['subject'];
+ 
+ 
+										$setss=mysql_query("select `name` from `master_sub_subject` where `id`='$sub_subject_ids'");
+										$fetss=mysql_fetch_array($setss);
+										
+										$sub_subject_names=$fetss['name'];
+										
+										
+								   ?>
+									<option value="<?php echo $sub_ids; ?>,<?php echo $sub_subject_ids; ?>"><?php echo $sub_names; ?>-<?php echo $sub_subject_names; ?></option>
+								   <?php } ?>
+								   
+								   
+								   <?php 
+								   $query1=mysql_query("select `elective`,`sub_subject_id` from `subject_allocation` where `class_id`='$class' && `subject_id`='0' && section_id='$section'");
+								   while($fet1=mysql_fetch_array($query1))
+								   {$f++;
+										$elec_id=$fet1['elective'];
+										$sub_subject_id=$fet1['sub_subject_id'];
+										
+										$sets1=mysql_query("select `subject` from `subject` where `id`='$elec_id'");
+										$fets1=mysql_fetch_array($sets1);
+										
+										$elec_name=$fets1['subject'];
+										
+										 
+										$setss1=mysql_query("select `name` from `master_sub_subject` where `id`='$sub_subject_id'");
+										$fetss1=mysql_fetch_array($setss1);
+										
+										$sub_subject_name=$fetss1['name'];
+								   ?>
+									<option value="<?php echo $elec_id; ?>,<?php echo $sub_subject_id; ?>"><?php echo $elec_name; ?>-<?php echo $sub_subject_name; ?></option>
+								   <?php } ?>
+									</select>
+								</div>
+								 
+							</div>
+						</div>
+					
+<input type="hidden" name="cls" value="<?php echo $class; ?>" >
+<input type="hidden" name="sec" value="<?php echo $section; ?>">
+<input type="hidden" name="trm" value="<?php echo $exam_name; ?>">
+<input type="hidden" name="cat" value="<?php echo $cat; ?>">
+					<button type="submit" name="test" class="btn btn-danger">Change</button>
+					</form>
+				</div>
+				<?php } ?>
 <div class="portlet-body">
 	<div class="table-scrollable">
 	<form  class="form-horizontal" id="form_sample_2"  role="form" method="post"> 
@@ -187,7 +278,7 @@ $query=mysql_query("select * from `student` where `class_id`='$class_id' && `sec
 					$fet1=mysql_fetch_array($set1);
 					$exam=$fet1['Exam'];
 				?>
-                <td><input class="number number_only check_max" maxmarks="<?php echo $max_marks;?>" name="marks[<?php echo $scholar_no; ?>][<?php echo $exam_category_type; ?>]" examcategorytype="<?php echo $exam_category_type; ?>" scholarno="<?php echo $scholar_no; ?>" value="<?php echo $student_marks_data_single_marks; ?>">
+                <td><input focus_id='<?php echo $i ;?>' class="form-control input-xsmall number number_only check_max" maxmarks="<?php echo $max_marks;?>" name="marks[<?php echo $scholar_no; ?>][<?php echo $exam_category_type; ?>]" examcategorytype="<?php echo $exam_category_type; ?>" scholarno="<?php echo $scholar_no; ?>" value="<?php echo $student_marks_data_single_marks; ?>" id="ncs<?php echo $i; ?>" >
 				<input class="form-control" type="hidden" name="class_id" value="<?php echo $class; ?>">
                 <input class="form-control" type="hidden" name="section_id" value="<?php echo $section; ?>">
                 <input class="form-control" type="hidden" name="subject_id" value="<?php echo $subject; ?>">
@@ -220,6 +311,35 @@ $query=mysql_query("select * from `student` where `class_id`='$class_id' && `sec
 <script src="assets/global/plugins/jquery.min.js" type="text/javascript"></script>
 <script src="assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
 <script>
+$(document).keydown(function(e) {
+	 
+    switch(e.which) {
+        case 37: // left
+        break;
+		 
+        case 38: // up
+        var $focused=$(':focus');
+        var f_id=$focused.attr("focus_id");
+        f_id--;
+        $("#ncs"+f_id).focus();
+        break;
+
+        case 39: // right
+       
+        break;
+
+        case 40: // down
+        var $focused=$(':focus');
+
+        var f_id=$focused.attr("focus_id");
+        f_id++;
+        $("#ncs"+f_id).focus();
+        break;
+
+        default: return; // exit this handler for other keys
+    }
+    e.preventDefault(); // prevent the default action (scroll / move caret)*/
+});	
 jQuery(document).ready(function() {
 	<!--- NUMBER VALIDATION  ------>		
 	$('.number_only').live('keyup',function(){
@@ -266,9 +386,9 @@ jQuery(document).ready(function() {
 			}); 
 		}
 	});
-	
 
 });
+
 </script>
 
 <?php footer();?>
